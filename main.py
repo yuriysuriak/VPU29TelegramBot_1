@@ -2,7 +2,7 @@ import os
 import logging
 
 from dotenv import load_dotenv
-from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
 load_dotenv()
@@ -45,12 +45,13 @@ async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     last_name = update.message.contact.last_name
 
     await update.message.reply_text(
-    f"""       
+        f"""       
         user_id = {user_id}
-first_name = {first_name}        
-last_name = {last_name}
-    """)
-
+        first_name = {first_name}        
+        last_name = {last_name}
+        """,
+        reply_markup=ReplyKeyboardRemove(),
+    )
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
@@ -64,8 +65,6 @@ if __name__ == '__main__':
     application.add_handler(location_handler)
     contact_handler = MessageHandler(filters.CONTACT, contact)
     application.add_handler(contact_handler)
-
-
 
 
     application.run_polling()
